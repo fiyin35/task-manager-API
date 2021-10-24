@@ -1,5 +1,6 @@
 const Task = require('../models/Task');
 const asyncwrapper = require('../middleware/async')
+const {customError} = require('../errors/custom-error')
 
 const getAllTasks = asyncwrapper( async (req, res) => {
     
@@ -17,7 +18,7 @@ const getTask = asyncwrapper( async (req, res) => {
         const {id: taskID} = req.params
         const task = await Task.findOne({_id: taskID})
         if(!task) {
-            return res.status(404).json({msg: `no task with id: ${taskID}`})
+            return next(customError(`no task with id: ${taskID}`, 404))
         }
         res.status(200).json({id: req.params.id})    
       
@@ -31,7 +32,7 @@ const updateTask = asyncwrapper( async (req, res) => {
             runValidators: true
         })
         if(!task) {
-            return res.status(404).json({msg: `no task found with id ${taskID}`})
+            return next(customError(`no task with id: ${taskID}`, 404))
         }
         res.status(200).json({msg: `task updated successfully`})
    
@@ -42,7 +43,7 @@ const deleteTask = asyncwrapper(async (req, res) => {
         const {id: taskID} = req.params
         const task = await Task.findOneAndDelete({_id: taskID})
         if(!task) {
-            return res.status(404).json({msg: `no task with id: ${taskID}`})
+            return next(customError(`no task with id: ${taskID}`, 404))
         }
         res.status(200).json({msg: `task with id : ${taskID} deleted successfully`})
         res.status(500).json({msg: err})
