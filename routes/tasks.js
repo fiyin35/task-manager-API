@@ -12,8 +12,3 @@ router.route('/:id').get(getTask).patch(updateTask).delete(deleteTask);
 
 module.exports = router
 
-// MongoDB Details//
-//m001-mongodb-basics
-//m001-student
-//fiyin
-//Password
